@@ -1,3 +1,5 @@
+package com.xy.tank;
+
 import java.awt.*;
 
 public class Main {
