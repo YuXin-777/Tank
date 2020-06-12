@@ -3,16 +3,27 @@ package com.xy.tank;
 import java.awt.*;
 
 public class Bullet {
-    private int x,y;
-    private Dir dir;
     private static final int SPEED = 10;
+    private int x, y;
+    private Dir dir;
+    private boolean live = true;
     private Group group;
-    public Bullet(int x, int y, Dir dir,Group group) {
+
+    public Bullet(int x, int y, Dir dir, Group group) {
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.group = group;
     }
+
+    public boolean isLive() {
+        return live;
+    }
+
+    public void setLive(boolean live) {
+        this.live = live;
+    }
+
     public void paint(Graphics g) {
         switch (dir) {
             case L:
@@ -32,7 +43,7 @@ public class Bullet {
     }
 
     private void move() {
-        switch (dir){
+        switch (dir) {
             case L:
                 x -= SPEED;
                 break;
@@ -45,6 +56,30 @@ public class Bullet {
             case D:
                 y += SPEED;
                 break;
+        }
+        boundsCheck();
+    }
+
+    public void collidsWithTank(Tank tank) {
+        if(!this.isLive() || !tank.isLive()) return;
+        if(this.group == tank.getGroup()) return;
+        Rectangle rect = new Rectangle(x, y, ResourceMgr.bulletU.getWidth(), ResourceMgr.bulletU.getHeight());
+        Rectangle rectTank = new Rectangle(tank.getX(), tank.getY(), ResourceMgr.goodTankU.getWidth(),
+                ResourceMgr.goodTankU.getHeight());
+        if(rect.intersects(rectTank)){
+            this.die();
+            tank.die();
+        }
+
+    }
+    public void die(){
+        this.setLive(false);
+        TankFrame.INSTANCE.add(new Explode(x,y));
+    }
+
+    private void boundsCheck() {
+        if (x < 0 || y < 30 || x > TankFrame.GAME_WIDTH || y > TankFrame.GAME_HEIGHT) {
+            live = false;
         }
     }
 

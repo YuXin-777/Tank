@@ -4,8 +4,8 @@ import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
-        Frame tf = new TankFrame();
-        tf.setVisible(true);
+        //TankFrame tf = new TankFrame();
+        TankFrame.INSTANCE.setVisible(true);
 
         for(;;){
             try {
@@ -13,7 +13,7 @@ public class Main {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            tf.repaint();
+            TankFrame.INSTANCE.repaint();
         }
     }
 
