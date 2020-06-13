@@ -6,7 +6,7 @@ public class Main {
     public static void main(String[] args) {
         //TankFrame tf = new TankFrame();
         TankFrame.INSTANCE.setVisible(true);
-
+        new Thread(()-> new Audio("audio/war1.wav").loop()).start();
         for(;;){
             try {
                 Thread.sleep(25);

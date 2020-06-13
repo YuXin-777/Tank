@@ -1,7 +1,12 @@
 package com.xy.tank;
 
+import com.xy.tank.strategy.DefaultFireStrategy;
+import com.xy.tank.strategy.FireStrategy;
+import com.xy.tank.strategy.FourDirFireStrategy;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.lang.reflect.InvocationTargetException;
 
 public class Player {
     private int x,y;
@@ -27,6 +32,7 @@ public class Player {
         this.y = y;
         this.dir = dir;
         this.group = group;
+        this.initFireStrategy();
     }
 
     public Group getGroup() {
@@ -133,14 +139,29 @@ public class Player {
     public void setY(int y) {
         this.y = y;
     }
-
-    private void fire() {
-        int bX = x + ResourceMgr.badTankU.getWidth()/2 - ResourceMgr.bulletU.getWidth()/2;
-        int bY = y + ResourceMgr.badTankU.getHeight()/2 - ResourceMgr.bulletU.getHeight()/2;
-        TankFrame.INSTANCE.add(new Bullet(bX,bY,dir,group));
+    private  FireStrategy fireStrategy = null;
+    private void initFireStrategy(){
+        ClassLoader loader = Player.class.getClassLoader();
+        try {
+            Class clazz = loader.loadClass("com.xy.tank.strategy."+PropertyMgr.get("tankFireStrategy"));
+            fireStrategy = (FireStrategy)clazz.getDeclaredConstructor().newInstance();
+        } catch ( Exception   e) {
+            e.printStackTrace();
+        }
+    }
+    private void fire()  {
+        fireStrategy.fire(this);
     }
 
     public void die() {
         this.setLive(false);
+    }
+
+    public Dir getDir() {
+        return dir;
+    }
+
+    public void setDir(Dir dir) {
+        this.dir = dir;
     }
 }
