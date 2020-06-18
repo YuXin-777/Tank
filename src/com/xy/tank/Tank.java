@@ -5,7 +5,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-public class Tank {
+public class Tank extends AbstractGameObject{
     private int x, y;
     private int oldX,oldY;
     private Dir dir;
@@ -15,6 +15,7 @@ public class Tank {
     private Group group = Group.BAD;
     private boolean live = true;
     private int width,height;
+    private Rectangle rect;
     public Group getGroup() {
         return group;
     }
@@ -39,6 +40,7 @@ public class Tank {
         this.group = group;
         this.width = ResourceMgr.badTankU.getWidth();
         this.height = ResourceMgr.badTankU.getHeight();
+        this.rect = new Rectangle(x, y, width, height);
     }
 
     public void paint(Graphics g) {
@@ -58,6 +60,8 @@ public class Tank {
                 break;
         }
         move();
+        rect.x = x;
+        rect.y = y;
     }
 
     private void move() {
@@ -123,5 +127,12 @@ public class Tank {
             this.x = oldX;
             this.y = oldY;
         }
+    }
+    public Rectangle getRect() {
+        return rect;
+    }
+    public void back() {
+        this.x = oldX;
+        this.y = oldY;
     }
 }
